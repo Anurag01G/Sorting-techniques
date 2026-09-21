@@ -1,0 +1,117 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Student {
+    string name;
+    float cgpa;
+
+public:
+    void input() {
+        cout << "Enter name: ";
+        cin >> name;
+
+        cout << "Enter CGPA: ";
+        cin >> cgpa;
+    }
+
+    void display() {
+        cout << name << "\t\t" << cgpa << endl;
+    }
+
+    float getCGPA() {
+        return cgpa;
+    }
+
+    // Selection Sort - Descending
+    static void selectionSort(Student s[], int n) {
+        for (int i = 0; i < n - 1; i++) {
+            int maxIndex = i;
+
+            for (int j = i + 1; j < n; j++) {
+                if (s[j].getCGPA() > s[maxIndex].getCGPA()) {
+                    maxIndex = j;
+                }
+            }
+
+            Student temp = s[i];
+            s[i] = s[maxIndex];
+            s[maxIndex] = temp;
+        }
+    }
+
+    // Insertion Sort - Descending + Shift Count
+    static int insertionSort(Student s[], int n) {
+        int shifts = 0;
+
+        for (int i = 1; i < n; i++) {
+            Student key = s[i];
+            int j = i - 1;
+
+            while (j >= 0 && s[j].getCGPA() < key.getCGPA()) {
+                s[j + 1] = s[j];
+                j--;
+                shifts++;
+            }
+
+            s[j + 1] = key;
+        }
+
+        return shifts;
+    }
+};
+
+int main() {
+    int n;
+
+    cout << "Enter number of students: ";
+    cin >> n;
+
+    Student s[50];
+    Student original[50];
+
+    // Input
+    for (int i = 0; i < n; i++) {
+        cout << "\nStudent " << i + 1 << endl;
+        s[i].input();
+
+        // Make a copy of original data
+        original[i] = s[i];
+    }
+
+    // ---------------- SELECTION SORT ----------------
+    Student::selectionSort(s, n);
+
+    cout << "\n--- Merit List using Selection Sort ---\n";
+    cout << "Name\t\tCGPA\n";
+
+    for (int i = 0; i < n; i++) {
+        s[i].display();
+    }
+
+    // ---------------- INSERTION SORT ----------------
+    // Use original unsorted data
+    int shifts = Student::insertionSort(original, n);
+
+    cout << "\n--- Merit List using Insertion Sort ---\n";
+    cout << "Name\t\tCGPA\n";
+
+    for (int i = 0; i < n; i++) {
+        original[i].display();
+    }
+
+    cout << "\nNumber of shifts = " << shifts << endl;
+
+    // ---------------- TOP 5 ----------------
+    cout << "\n--- Top 5 Students ---\n";
+    cout << "Rank\tName\t\tCGPA\n";
+
+    int top = (n < 5) ? n : 5;
+
+    for (int i = 0; i < top; i++) {
+        cout << i + 1 << "\t";
+        original[i].display();
+    }
+
+    return 0;
+}
